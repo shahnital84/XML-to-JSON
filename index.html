@@ -17,6 +17,18 @@
 			<p class="lead">Input XML data. When you click on CONVERT button data should be displayed in JSON format.</p>
 			<hr class="my-4">
 		</div>
+		<form id="xmlForm">			
+			<div class="form-group">
+				<label for="xmlTextarea">Input XML Data</label><!-- //multiline text area -->
+				<textarea class="form-control" id="xmlTextarea" rows="3"></textarea>
+			</div>
+			<button type="submit" class="btn btn-primary">CONVERT TO JSON</button>
+			<div class="form-group">
+				<label for="jsonDisplay">JSON Data</label><!-- //multiline text area -->
+				<textarea class="form-control" id="jsonDisplay" rows="3" disabled="true"></textarea>
+			</div>
+			
+		</form>
 	</div>
 </body>
 </html>
