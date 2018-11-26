@@ -6,7 +6,7 @@
 	<!-- //ADD ON LIBRARY - BOOTSTRAP , CSS -->
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>	
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 </head>
@@ -25,10 +25,50 @@
 			<button type="submit" class="btn btn-primary">CONVERT TO JSON</button>
 			<div class="form-group">
 				<label for="jsonDisplay">JSON Data</label><!-- //multiline text area -->
-				<textarea class="form-control" id="jsonDisplay" rows="3" disabled="true"></textarea>
+				<textarea class="form-control" id="jsonDisplay" rows="3"></textarea>
 			</div>
-			
+			<div class="form-group">
+				<button type="button" id="copyJSON" class="btn btn-primary">Click to copy JSON</button>
+			</div>
+			<div class="alert alert-primary" role="alert" id="message" style="display: none;">
+				Use JSON Formatter - <a target="_blank" href="https://jsonformatter.curiousconcept.com/" class="alert-link">click here!!</a>
+			</div>
 		</form>
 	</div>
 </body>
+<script type="text/javascript">
+	$("#copyJSON").click(function(){
+		$("#jsonDisplay").select();
+		document.execCommand('copy');
+	});
+	$("#xmlTextarea").val('<xml><id>1</id><first_name>First</first_name><last_name>Last</last_name><address><postal>L5H7YI</postal><city>Barrie</city></address><person_age>25</person_age></xml>');
+	// javascript on form submit event will check whether input data in valid json
+	$('#xmlForm').submit(function(e){
+		e.preventDefault();
+		var data = $('#xmlTextarea').val();
+		try {
+			var parsexmldata = $.parseXML(data);
+			$(parsexmldata).find('xml').each(function(){
+				$('#jsonDisplay').val("{" + XmlToJson(this) + "}");
+			});
+			$('#message').show();
+		}catch (err){
+			console.log(err);
+		}
+	});
+	// XML TO JSON
+	function XmlToJson(data){
+		var responseData = "";
+		$(data).children().each(function(){
+			if(this.childElementCount > 0){
+				responseData += '"' + this.tagName + '" :{';
+				responseData += XmlToJson(this);
+				responseData += '},';
+			}else{
+				responseData += '"' + this.tagName + '" : "' + $(this).text() + '",';
+			}
+		});
+		return responseData.substring(0, responseData.length - 1);;
+	}
+</script>
 </html>
